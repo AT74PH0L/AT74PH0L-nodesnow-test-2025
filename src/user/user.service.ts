@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 // import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
@@ -10,10 +10,10 @@ export class UserService {
     @InjectModel(User) private readonly userRepository: typeof User,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async createUser(createUserDto: CreateUserDto) {
     const existingUser = await this.findUserByEmail(createUserDto.email);
     if (existingUser) {
-      throw new HttpException('Email already in use', HttpStatus.BAD_REQUEST);
+      throw new Error('EMAIL_ALREADY_IN_USE');
     }
     const user = await this.userRepository.create({
       email: createUserDto.email,
@@ -24,24 +24,35 @@ export class UserService {
       id: user.id,
       email: user.email,
     };
-
     return userResponse;
   }
 
   async findUserByEmail(email: string) {
-    return await this.userRepository.findOne({
+    const user = await this.userRepository.findOne({
       where: { email },
     });
+    return user;
   }
 
-  // findAll() {
-  //   return `This action returns all user`;
-  // }
-  // update(id: number) {
-  //   return `This action updates a #${id} user`;
-  // }
+  async findUserById(id: string) {
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+    return user;
+  }
 
-  // remove(id: number) {
-  //   return `This action removes a #${id} user`;
-  // }
+  async removeUser(id: string) {
+    const user = await this.findUserById(id);
+    if (user) {
+      return await user.destroy();
+    }
+    throw new Error('USER_NOT_FOUND');
+  }
 }
+
+// findAll() {
+//   return `This action returns all user`;
+// }
+// update(id: number) {
+//   return `This action updates a #${id} user`;
+// }

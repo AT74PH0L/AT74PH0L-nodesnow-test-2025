@@ -21,7 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
           return request.cookies?.access_token || null;
         },
       ]),
-      secretOrKey: jwtSecret, // Ensure that secretOrKey is always a string
+      secretOrKey: jwtSecret,
       ignoreExpiration: false,
     });
   }

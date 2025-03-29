@@ -1,6 +1,6 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UserService } from 'src/user/user.service';
+import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login-auth.dto';
 
@@ -21,12 +21,9 @@ export class AuthService {
   }
 
   async login(user: LoginDto): Promise<{ access_token: string }> {
-    if (!user) {
-      throw new Error('Invalid user data');
-    }
     const result = await this.userService.findUserByEmail(user.email);
     if (!result) {
-      throw new HttpException('User no found', HttpStatus.BAD_REQUEST);
+      throw new Error('USER_NOT_FOUND');
     }
     const payload = { email: user.email, id: result.id };
     const access_token = this.jwtService.sign(payload);

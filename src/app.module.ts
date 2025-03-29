@@ -10,10 +10,10 @@ import { TaskModule } from './task/task.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    TaskModule,
     UserModule,
     AuthModule,
     DatabaseModule,
-    TaskModule,
   ],
   controllers: [AppController],
   providers: [AppService],

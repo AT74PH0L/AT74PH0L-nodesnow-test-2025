@@ -1,75 +1,91 @@
+import { CreateUserDto } from './../user/dto/create-user.dto';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserService } from '../user/user.service';
+import { UserModule } from '../user/user.module';
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from '../database/database.module';
+import { SequelizeModule } from '@nestjs/sequelize';
+import { User } from '../user/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-// import { LoginDto } from './dto/login-auth.dto';
+// import { JwtService } from '@nestjs/jwt';
 
 describe('AuthService', () => {
   let authService: AuthService;
-  let userService: UserService;
-  // let jwtService: JwtService;
+  let userService: UserService; // Mock UsersService
+  // let JwtService: JwtService;
+  let userId: string;
 
+  const createUserDto: CreateUserDto = {
+    email: 'mock@mock.com',
+    password: 'M0ck!123',
+  };
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [
+        UserModule,
+        ConfigModule.forRoot({ isGlobal: true }),
+        DatabaseModule,
+        SequelizeModule.forFeature([User]),
+      ],
       providers: [
         AuthService,
         {
-          provide: UserService,
-          useValue: {
-            findUserByEmail: jest.fn(),
-          },
-        },
-        {
           provide: JwtService,
-          useValue: {
-            sign: jest.fn(() => 'test_token'),
-          },
+          useValue: { sign: jest.fn().mockReturnValue('mocked-jwt') },
         },
       ],
     }).compile();
 
-    authService = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
-    // jwtService = module.get<JwtService>(JwtService);
+    authService = module.get<AuthService>(AuthService);
   });
 
-  describe('validateUser', () => {
-    it('should return user if password is correct', async () => {
-      const user = {
-        id: 'some-uuid',
-        email: 'test@example.com',
-        password: 'aaa', // Plain password before hashing
-      };
+  it('should be defined', () => {
+    expect(authService).toBeDefined();
+  });
 
-      // Mocking findUserByEmail
-      jest.spyOn(userService, 'findUserByEmail').mockResolvedValue(user);
-
-      // Mocking bcrypt.compare to always return true (password is correct)
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(true as never);
-
-      const result = await authService.validateUser('test@example.com', 'aaa');
-      expect(result).toEqual(user);
-    });
-
-    it('should return null if password is incorrect', async () => {
-      const user = {
-        id: 'some-uuid',
-        email: 'test@example.com',
-        password: 'aaa', // Plain password before hashing
-      };
-
-      // Mocking findUserByEmail
-      jest.spyOn(userService, 'findUserByEmail').mockResolvedValue(user);
-
-      // Mocking bcrypt.compare to return false (password is incorrect)
-      jest.spyOn(bcrypt, 'compare').mockResolvedValue(false as never);
+  describe('Validate user', () => {
+    it('should pass validate user password is correct', async () => {
+      const userRes = await userService.createUser(createUserDto);
+      userId = userRes.id;
 
       const result = await authService.validateUser(
-        'test@example.com',
-        'wrongpassword',
+        createUserDto.email,
+        createUserDto.password,
       );
-      expect(result).toBeNull();
+      expect(result).toBeDefined();
+      expect(result?.email).toBe(userRes.email);
     });
+
+    it('should fail validate user password is not correct', async () => {
+      const result = await authService.validateUser(
+        'mock@mock.com',
+        'Password!123',
+      );
+      expect(result).toBeDefined();
+      expect(result).toBe(null);
+    });
+  });
+
+  describe('Login', () => {
+    it('should return access token', async () => {
+      const result = await authService.login(createUserDto);
+
+      expect(result.access_token).toBe('mocked-jwt');
+    });
+
+    it('should throw error if user not found', async () => {
+      await expect(
+        authService.login({
+          email: 'mockNotFound@mock.com',
+          password: 'M0ck!123',
+        }),
+      ).rejects.toThrow(new Error('USER_NOT_FOUND'));
+    });
+  });
+
+  afterAll(async () => {
+    await userService.removeUser(userId);
   });
 });

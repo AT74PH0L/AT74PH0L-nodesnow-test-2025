@@ -16,6 +16,7 @@ import { User } from '../user/entities/user.entity';
         synchronize: true,
         autoLoadModels: true,
         models: [User, Task],
+        logging: process.env.NODE_ENV !== 'test',
       }),
     }),
   ],
