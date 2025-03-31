@@ -13,10 +13,7 @@ export class TaskService {
   ) {}
 
   async createTask(id: string, createTaskDto: CreateTaskDto) {
-    const user = await this.userService.findUserById(id);
-    if (!user) {
-      throw new Error('USER_NOT_FOUND');
-    }
+    await this.userService.findUserById(id);
 
     const taskData = { ...createTaskDto, userId: id };
     const result = await this.taskRepository.create(taskData);

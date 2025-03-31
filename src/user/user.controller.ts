@@ -31,7 +31,7 @@ import {
 } from '@nestjs/swagger';
 import { AuthenticatedRequest } from 'src/task/authenticated-request.interface';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { JwtAuthGuard } from 'src/auth/guard/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 
 @ApiTags('User')
 @Controller('user')
@@ -81,7 +81,7 @@ export class UserController {
   async changePassoword(
     @Request() req: AuthenticatedRequest,
     @Body() body: UpdateUserDto,
-  ) {
+  ): Promise<updateUserResponseDto | UserNotFoundResponseDto | undefined> {
     try {
       await this.userService.changePassoword(req.user.id, body);
       return {
@@ -108,7 +108,9 @@ export class UserController {
   @ApiCookieAuth()
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async getUserbyId(@Param('id') id: string) {
+  async getUserbyId(
+    @Param('id') id: string,
+  ): Promise<UserResponseDto | UserNotFoundResponseDto | undefined> {
     try {
       const user = await this.userService.findUserById(id);
       return {
@@ -135,7 +137,9 @@ export class UserController {
   @Delete(':id')
   @ApiCookieAuth()
   @UseGuards(JwtAuthGuard)
-  async deleteUser(@Param('id') id: string) {
+  async deleteUser(
+    @Param('id') id: string,
+  ): Promise<UserDeleteResponseDto | UserNotFoundResponseDto | undefined> {
     try {
       await this.userService.removeUser(id);
       return {

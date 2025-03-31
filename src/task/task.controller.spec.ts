@@ -118,7 +118,6 @@ describe('TaskController', () => {
     it('should return task by ID', async () => {
       mockTaskService.findTaskById.mockResolvedValue(mockTaskResponse);
       const result = await controller.findOne(mockTaskId);
-      console.log(result);
       expect(mockTaskService.findTaskById).toHaveBeenCalled();
       expect(result).toMatchObject({
         statusCode: 200,

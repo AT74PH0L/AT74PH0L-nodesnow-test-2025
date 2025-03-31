@@ -98,8 +98,8 @@ export class UserResponseDto {
     id: string;
     email: string;
     password: string;
-    createdAt: string;
-    updatedAt: string;
+    createdAt?: string;
+    updatedAt?: string;
   };
 }
 

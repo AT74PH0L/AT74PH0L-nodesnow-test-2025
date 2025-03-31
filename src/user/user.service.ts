@@ -37,10 +37,13 @@ export class UserService {
     return user;
   }
 
-  async findUserById(id: string): Promise<User | null> {
+  async findUserById(id: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id },
     });
+    if (!user) {
+      throw new Error('USER_NOT_FOUND');
+    }
     return user;
   }
 
@@ -49,7 +52,6 @@ export class UserService {
     if (user && (await bcrypt.compare(updateBody.oldPassword, user.password))) {
       return user.update({ where: { password: updateBody.newPassword } });
     }
-    throw new Error('USER_NOT_FOUND');
   }
 
   async removeUser(id: string): Promise<User | void> {
@@ -57,6 +59,5 @@ export class UserService {
     if (user) {
       return await user.destroy();
     }
-    throw new Error('USER_NOT_FOUND');
   }
 }
