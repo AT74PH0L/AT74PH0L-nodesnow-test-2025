@@ -49,7 +49,7 @@ describe('UserController', () => {
     it('should create a user successfully', async () => {
       mockUserService.createUser.mockResolvedValue(mockResponse.data);
 
-      const result = await userController.create(createUserDto);
+      const result = await userController.createUser(createUserDto);
       expect(mockUserService.createUser).toHaveBeenCalled();
       expect(result).toEqual(mockResponse);
     });
@@ -59,7 +59,7 @@ describe('UserController', () => {
       mockUserService.createUser.mockRejectedValue(mockResponse);
 
       expect(mockUserService.createUser).toHaveBeenCalled();
-      await expect(userController.create(createUserDto)).rejects.toThrow(
+      await expect(userController.createUser(createUserDto)).rejects.toThrow(
         new BadRequestException('Email already in use'),
       );
     });

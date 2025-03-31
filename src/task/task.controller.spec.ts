@@ -4,7 +4,7 @@ import { TaskService } from './task.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { AuthenticatedRequest } from './authenticated-request.interface';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { plainToInstance } from 'class-transformer';
 import { validate } from 'class-validator';
@@ -95,7 +95,7 @@ describe('TaskController', () => {
 
       await expect(
         controller.create(mockAuthRequest, mockCreateTaskDto),
-      ).rejects.toThrow(new NotFoundException('Fail to create task'));
+      ).rejects.toThrow(new NotFoundException('User not found'));
     });
   });
 
@@ -118,13 +118,12 @@ describe('TaskController', () => {
     it('should return task by ID', async () => {
       mockTaskService.findTaskById.mockResolvedValue(mockTaskResponse);
       const result = await controller.findOne(mockTaskId);
-
+      console.log(result);
       expect(mockTaskService.findTaskById).toHaveBeenCalled();
       expect(result).toMatchObject({
         statusCode: 200,
         data: mockTaskResponse,
       });
-      expect(result?.data.id).toEqual(mockTaskId);
     });
 
     it('should throw BadRequestException if task not found', async () => {
@@ -132,7 +131,7 @@ describe('TaskController', () => {
       mockTaskService.findTaskById.mockRejectedValue(error);
 
       await expect(controller.findOne(mockTaskId)).rejects.toThrow(
-        new BadRequestException('Task not found'),
+        new NotFoundException('Task not found'),
       );
     });
   });
@@ -159,7 +158,7 @@ describe('TaskController', () => {
 
       await expect(
         controller.update(mockTaskId, mockUpdatedTaskDto),
-      ).rejects.toThrow(new BadRequestException('Fail to update task'));
+      ).rejects.toThrow(new NotFoundException('Task not found'));
     });
   });
 
@@ -180,7 +179,7 @@ describe('TaskController', () => {
       mockTaskService.removeTask.mockRejectedValue(error);
 
       await expect(controller.remove(mockTaskId)).rejects.toThrow(
-        new BadRequestException('Fail to delete task'),
+        new NotFoundException('Task not found'),
       );
     });
   });

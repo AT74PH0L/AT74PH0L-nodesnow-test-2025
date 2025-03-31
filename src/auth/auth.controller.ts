@@ -9,21 +9,38 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { LoginDto } from './dto/login-auth.dto';
+import {
+  LoginDto,
+  LoginFailResponseDto,
+  LoginResponseDto,
+} from './dto/login-auth.dto';
 import { LocalAuthGuard } from './guard/local.guard';
 import { Response } from 'express';
+import {
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('Authentication')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('/login')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Use to login' })
+  @ApiOkResponse({ description: 'Login success', type: LoginResponseDto })
+  @ApiUnauthorizedResponse({
+    description: 'Login fail',
+    type: LoginFailResponseDto,
+  })
   async login(
     @Body() body: LoginDto,
     @Res({ passthrough: true }) res: Response,
-  ) {
+  ): Promise<LoginFailResponseDto | LoginResponseDto | undefined> {
     try {
       const { access_token } = await this.authService.login(body);
       res.cookie('access_token', access_token, {

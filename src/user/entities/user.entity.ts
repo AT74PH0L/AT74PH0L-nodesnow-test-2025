@@ -5,7 +5,7 @@ import {
   Model,
   BeforeCreate,
 } from 'sequelize-typescript';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 @Table
 export class User extends Model {
   @Column({
