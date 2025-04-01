@@ -92,6 +92,8 @@ The application will be available at `http://localhost:3000` 🎉
 ---
 
 ## 📝 API Documentation
+Swagger: API Documentation
+`http://localhost:3000/api/docs/`
 
 ### 🔑 Authentication
 - **POST /auth/login** - Authenticate using email and password.
