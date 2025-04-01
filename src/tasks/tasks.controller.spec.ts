@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TaskController } from './task.controller';
-import { TaskService } from './task.service';
+import { TaskController } from './tasks.controller';
+import { TaskService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 import { AuthenticatedRequest } from './authenticated-request.interface';

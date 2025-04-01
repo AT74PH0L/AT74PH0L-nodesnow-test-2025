@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserService } from './user.service';
+import { UserService } from './users.service';
 import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from '../database/database.module';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { User } from './entities/user.entity';
+import { User } from './entities/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 
 describe('UserService', () => {

@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { TaskModule } from './task/task.module';
-import { UserModule } from './user/user.module';
+import { TaskModule } from './tasks/tasks.module';
+import { UserModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 

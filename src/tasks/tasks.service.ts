@@ -1,9 +1,9 @@
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { Task } from './entities/task.entity';
+import { Task } from './entities/tasks.entity';
 import { Injectable } from '@nestjs/common';
-import { UserService } from '../user/user.service';
+import { UserService } from '../users/users.service';
 
 @Injectable()
 export class TaskService {

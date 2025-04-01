@@ -12,7 +12,7 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UserService } from './users.service';
 import {
   CreateUserDto,
   CreateUserResponseDto,
@@ -29,12 +29,12 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { AuthenticatedRequest } from 'src/task/authenticated-request.interface';
+import { AuthenticatedRequest } from 'src/tasks/authenticated-request.interface';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';
 
 @ApiTags('User')
-@Controller('user')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

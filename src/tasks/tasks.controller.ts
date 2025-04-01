@@ -11,7 +11,7 @@ import {
   HttpStatus,
   NotFoundException,
 } from '@nestjs/common';
-import { TaskService } from './task.service';
+import { TaskService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 import { JwtAuthGuard } from '../auth/guard/jwt-auth.guard';

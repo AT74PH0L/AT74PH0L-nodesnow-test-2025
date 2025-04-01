@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { TaskService } from './task.service';
+import { TaskService } from './tasks.service';
 import { DatabaseModule } from '../database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Task } from './entities/task.entity';
+import { Task } from './entities/tasks.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UserModule } from '../user/user.module';
-import { UserService } from '../user/user.service';
-import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserModule } from '../users/users.module';
+import { UserService } from '../users/users.service';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { UpdateTaskDto } from './dto/update-task.dto';
 
 describe('TaskService', () => {

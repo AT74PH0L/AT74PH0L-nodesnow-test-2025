@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
-import { TaskService } from './task.service';
-import { TaskController } from './task.controller';
+import { TaskService } from './tasks.service';
+import { TaskController } from './tasks.controller';
 import { SequelizeModule } from '@nestjs/sequelize';
-import { Task } from './entities/task.entity';
-import { UserModule } from '../user/user.module';
+import { Task } from './entities/tasks.entity';
+import { UserModule } from '../users/users.module';
 // import { UserModule } from '../user/user.module';
 
 @Module({

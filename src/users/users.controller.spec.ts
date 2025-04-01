@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UserController } from './user.controller';
-import { UserService } from './user.service';
+import { UserController } from './users.controller';
+import { UserService } from './users.service';
 import { BadRequestException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { plainToInstance } from 'class-transformer';

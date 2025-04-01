@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { InjectModel } from '@nestjs/sequelize';
-import { User } from './entities/user.entity';
+import { User } from './entities/users.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcryptjs';
 
@@ -50,7 +50,7 @@ export class UserService {
   async changePassoword(id: string, updateBody: UpdateUserDto) {
     const user = await this.findUserById(id);
     if (user && (await bcrypt.compare(updateBody.oldPassword, user.password))) {
-      return user.update({ where: { password: updateBody.newPassword } });
+      return user.update({ password: updateBody.newPassword });
     }
   }
 

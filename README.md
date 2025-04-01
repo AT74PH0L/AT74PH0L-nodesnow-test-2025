@@ -1,99 +1,148 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Testing and Knowledge Preparation: Cooperative Education Program
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Tech Stack Selection
+- **NestJS**: Chosen for its well-structured architecture and TypeScript support.
+- **MySQL**: Selected for its high performance and ease of use as a relational database.
+- **Docker**: Utilized to streamline development and deployment processes.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Authentication & Authorization
+- **JWT (JSON Web Token)** is used for authentication, ensuring stateless user verification.
+- **API Authentication**: All Task-related API endpoints require authentication, except `POST /users`, which is used for user registration.
+## Database Design
+- **Relational Database**: MySQL is used to maintain structured relationships between `users` and `tasks`.
+- **User Table**:
+  - `id` (UUID, primary key)
+  - `email` (string, unique, required)
+  - `password` (hashed, required)
+- **Task Table**:
+  - `id` (UUID, primary key)
+  - `title` (string, required)
+  - `description` (string, optional)
+  - `status` (enum: "pending", "in_progress", "completed", default: "pending")
+  - `userId` (foreign key to User, required)
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Service Structure
+- **Controller-Service-Repository Pattern**
+  - **Controller**: Handles incoming requests and delegates tasks to the service layer.
+  - **Service**: Implements business logic and interacts with the repository layer.
+  - **Repository**: Manages database interactions and queries efficiently.
+ 
+---
 
-## Project setup
+## 🚀 Installation
 
+Follow these steps to set up the project locally:
+
+### 1. Clone the repository
 ```bash
-$ npm install
+git clone https://github.com/AT74PH0L/AT74PH0L-nodesnow-test-2025.git
+cd AT74PH0L-nodesnow-test-2025
 ```
 
-## Compile and run the project
-
+### 2. Install dependencies
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
-
+### 3. Configure environment variables
+Create a `.env` file and add the following:
 ```bash
-# unit tests
-$ npm run test
+DATABASE_HOST=localhost
+DATABASE_PORT=3306
+DATABASE_NAME=mydb
+DATABASE_USERNAME=user
+DATABASE_PASSWORD=password
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+JWT_SECRET=my_secret
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
+### 4. Setup Docker for MySQL
+Create a `docker-compose.yml` file and add the following:
+```yaml
+version: '3.8'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_DATABASE: ${DATABASE_NAME}
+      MYSQL_USER: ${DATABASE_USERNAME}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - '${DATABASE_PORT}:3306'
+    volumes:
+      - mysql_data:/var/lib/mysql
+volumes:
+  mysql_data:
+```
+Start MySQL with Docker:
 ```bash
-$ npm install -g mau
-$ mau deploy
+docker-compose up -d
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 5. Start the application
+Run the following command to start the server:
+```bash
+npm run start:dev
+```
+The application will be available at `http://localhost:3000` 🎉
 
-## Resources
+---
 
-Check out a few resources that may come in handy when working with NestJS:
+## 📝 API Documentation
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### 🔑 Authentication
+- **POST /auth/login** - Authenticate using email and password.
+  ```json
+  {
+    "email": "mock@mock.com",
+    "password": "M0ck!123"
+  }
+  ```
 
-## Support
+### User Management (Authentication required except for registration)
+- **POST /users** - Register a new user.
+  ```json
+  {
+    "email": "mock@mock.com",
+    "password": "M0ck!123"
+  }
+  ```
+- **PATCH /users** - (🔒 Requires authentication) Update user password.
+  ```json
+  {
+    "oldPassword": "M0ck!123",
+    "newPassword": "M0ck!12345"
+  }
+  ```
+- **GET /users/{id}** - (🔒 Requires authentication) Retrieve user information.
+  - Example: `http://localhost:3000/users/12345`
+- **DELETE /users/{id}** - (🔒 Requires authentication) Delete a specific user.
+  - Example: `http://localhost:3000/users/12345`
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+---
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### Task Management (🔒 Requires authentication for all endpoints)
+- **POST /tasks** - Create a new task.
+  ```json
+  {
+    "title": "Title name",
+    "description": "Description" // Optional
+  }
+  ```
+- **GET /tasks** - Retrieve all tasks.
+- **GET /tasks/{id}** - Retrieve a specific task.
+  - Example: `http://localhost:3000/tasks/12345`
+- **PATCH /tasks/{id}** - Update a task.
+  - Example: `http://localhost:3000/tasks/12345`
+  ```json
+  {
+    "title": "New title",
+    "description": "New description",
+    "status": "in_progress" // ENUM value
+  }
+  ```
+- **DELETE /tasks/{id}** - Delete a specific task.
+  - Example: `http://localhost:3000/tasks/12345`

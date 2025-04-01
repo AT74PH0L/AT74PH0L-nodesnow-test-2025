@@ -7,7 +7,7 @@ import {
   BelongsTo,
 } from 'sequelize-typescript';
 import { Status } from '../enums/status.enum';
-import { User } from '../../user/entities/user.entity';
+import { User } from '../../users/entities/users.entity';
 @Table
 export class Task extends Model {
   @Column({
