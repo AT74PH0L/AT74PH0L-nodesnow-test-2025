@@ -48,7 +48,7 @@ npm install
 ### 3. Configure environment variables
 Create a `.env` file and add the following:
 ```bash
-DATABASE_HOST=db //database contrain name
+DATABASE_HOST=db #database contrain name
 DATABASE_PORT=3306
 DATABASE_NAME=mydb
 DATABASE_USERNAME=user
