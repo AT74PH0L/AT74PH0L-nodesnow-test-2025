@@ -99,6 +99,8 @@ export class UserController {
       const err = error as Error;
       if (err.message === 'USER_NOT_FOUND') {
         throw new NotFoundException('User not found');
+      } else if (err.message == 'OLD_PASSWORD_IS_INCIRRECT') {
+        throw new UnauthorizedException('Old password is incorrect');
       }
     }
   }
@@ -129,8 +131,6 @@ export class UserController {
       const err = error as Error;
       if (err.message === 'USER_NOT_FOUND') {
         throw new NotFoundException('User not found');
-      } else if (err.message == 'OLD_PASSWORD_IS_INCIRRECT') {
-        throw new UnauthorizedException('Old password is incorrect');
       }
     }
   }

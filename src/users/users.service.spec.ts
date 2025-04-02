@@ -13,7 +13,7 @@ describe('UserService', () => {
   let userEmail: string;
   let userBody: object;
   const mockUser: CreateUserDto = {
-    email: 'mock1@mock.com',
+    email: 'mock@mock.com',
     password: 'M0ck123!',
   };
 
@@ -38,7 +38,7 @@ describe('UserService', () => {
     it('should return the user after create user', async () => {
       const expectUser = {
         id: expect.any(String) as string,
-        email: 'mock1@mock.com',
+        email: 'mock@mock.com',
       };
 
       const result = await service.createUser(mockUser);
@@ -95,9 +95,9 @@ describe('UserService', () => {
         newPassword: 'M0ck12345!',
       };
 
-      await expect(
-        service.changePassoword('notFound', changPwd),
-      ).rejects.toThrow(Error('OLD_PASSWORD_IS_INCIRRECT'));
+      await expect(service.changePassoword(userId, changPwd)).rejects.toThrow(
+        Error('OLD_PASSWORD_IS_INCIRRECT'),
+      );
     });
   });
 

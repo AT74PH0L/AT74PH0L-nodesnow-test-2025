@@ -17,7 +17,7 @@ describe('AuthService', () => {
   let userId: string;
 
   const createUserDto: CreateUserDto = {
-    email: 'mock@mock.com',
+    email: 'mock1@mock.com',
     password: 'M0ck!123',
   };
   beforeEach(async () => {
@@ -60,7 +60,7 @@ describe('AuthService', () => {
 
     it('should fail validate user password is not correct', async () => {
       const result = await authService.validateUser(
-        'mock@mock.com',
+        'mock1@mock.com',
         'Password!123',
       );
       expect(result).toBeDefined();
