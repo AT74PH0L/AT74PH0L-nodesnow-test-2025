@@ -30,6 +30,11 @@
  
 ---
 
+## Docker compose🐳
+In my docker-compose setup, can run the command `docker-compose up`, and both the database and the app will start together.
+
+---
+
 ## 🚀 Installation
 
 Follow these steps to set up the project locally:
@@ -124,7 +129,6 @@ Swagger: API Documentation
 - **DELETE /users/{id}** - (🔒 Requires authentication) Delete a specific user.
   - Example: `http://localhost:3000/users/12345`
 
----
 
 ### Task Management (🔒 Requires authentication for all endpoints)
 - **POST /tasks** - Create a new task.
@@ -148,3 +152,5 @@ Swagger: API Documentation
   ```
 - **DELETE /tasks/{id}** - Delete a specific task.
   - Example: `http://localhost:3000/tasks/12345`
+
+---
