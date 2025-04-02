@@ -37,7 +37,7 @@ export class UserService {
     return user;
   }
 
-  async findUserById(id: string): Promise<User> {
+  async findUserById(id: string) {
     const user = await this.userRepository.findOne({
       where: { id },
     });
@@ -49,9 +49,13 @@ export class UserService {
 
   async changePassoword(id: string, updateBody: UpdateUserDto) {
     const user = await this.findUserById(id);
-    if (user && (await bcrypt.compare(updateBody.oldPassword, user.password))) {
-      return user.update({ password: updateBody.newPassword });
+    const isMatch = await bcrypt.compare(updateBody.oldPassword, user.password);
+    if (!isMatch) {
+      throw new Error('OLD_PASSWORD_IS_INCIRRECT');
     }
+    const salt = await bcrypt.genSalt(10);
+    const password = await bcrypt.hash(updateBody.newPassword, salt);
+    return user.update({ password: password });
   }
 
   async removeUser(id: string): Promise<User | void> {

@@ -11,12 +11,14 @@ import {
   Param,
   Delete,
   UseGuards,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UserService } from './users.service';
 import {
   CreateUserDto,
   CreateUserResponseDto,
   ErrorResponseDto,
+  OldPwdIncorrectResponseDto,
   updateUserResponseDto,
   UserDeleteResponseDto,
   UserNotFoundResponseDto,
@@ -28,6 +30,7 @@ import {
   ApiCreatedResponse,
   ApiOperation,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { AuthenticatedRequest } from 'src/tasks/authenticated-request.interface';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -68,8 +71,12 @@ export class UserController {
 
   @ApiOperation({ summary: 'Use to change password' })
   @ApiCreatedResponse({
-    description: 'User create success',
+    description: 'Change password success',
     type: updateUserResponseDto,
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Old password is incorrect',
+    type: OldPwdIncorrectResponseDto,
   })
   @ApiBadRequestResponse({
     description: 'User not found',
@@ -78,7 +85,7 @@ export class UserController {
   @Patch()
   @ApiCookieAuth()
   @UseGuards(JwtAuthGuard)
-  async changePassoword(
+  async updateUser(
     @Request() req: AuthenticatedRequest,
     @Body() body: UpdateUserDto,
   ): Promise<updateUserResponseDto | UserNotFoundResponseDto | undefined> {
@@ -113,14 +120,17 @@ export class UserController {
   ): Promise<UserResponseDto | UserNotFoundResponseDto | undefined> {
     try {
       const user = await this.userService.findUserById(id);
+      const userResponse = { ...user, password: '' as typeof user.password };
       return {
         statusCode: HttpStatus.OK,
-        data: user,
+        data: userResponse,
       };
     } catch (error) {
       const err = error as Error;
       if (err.message === 'USER_NOT_FOUND') {
         throw new NotFoundException('User not found');
+      } else if (err.message == 'OLD_PASSWORD_IS_INCIRRECT') {
+        throw new UnauthorizedException('Old password is incorrect');
       }
     }
   }

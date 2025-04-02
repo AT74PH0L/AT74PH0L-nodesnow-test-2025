@@ -85,11 +85,11 @@ export class UserResponseDto {
   declare statusCode: number;
 
   @ApiProperty({
-    type: Object, // ระบุว่าเป็น Object และให้รายละเอียดของประเภท
+    type: Object,
     example: {
       id: '1',
       email: 'user@example.com',
-      password: 'hashedpassword123',
+      password: '',
       createdAt: '2025-04-01T12:00:00Z',
       updatedAt: '2025-04-01T12:00:00Z',
     },
@@ -109,4 +109,15 @@ export class UserDeleteResponseDto {
 
   @ApiProperty({ example: 'Delete user successfully' })
   declare message: string;
+}
+
+export class OldPwdIncorrectResponseDto {
+  @ApiProperty({ example: 401 })
+  declare statusCode: number;
+
+  @ApiProperty({ example: 'Old password is incorrect' })
+  declare message: string;
+
+  @ApiProperty({ example: 'Unauthorized' })
+  declare error: string;
 }

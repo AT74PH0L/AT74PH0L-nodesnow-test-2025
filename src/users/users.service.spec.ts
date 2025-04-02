@@ -5,6 +5,7 @@ import { DatabaseModule } from '../database/database.module';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { User } from './entities/users.entity';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 describe('UserService', () => {
   let service: UserService;
@@ -12,7 +13,7 @@ describe('UserService', () => {
   let userEmail: string;
   let userBody: object;
   const mockUser: CreateUserDto = {
-    email: 'mock@mock.com',
+    email: 'mock1@mock.com',
     password: 'M0ck123!',
   };
 
@@ -37,7 +38,7 @@ describe('UserService', () => {
     it('should return the user after create user', async () => {
       const expectUser = {
         id: expect.any(String) as string,
-        email: 'mock@mock.com',
+        email: 'mock1@mock.com',
       };
 
       const result = await service.createUser(mockUser);
@@ -63,6 +64,40 @@ describe('UserService', () => {
     it('should return user if find user by id', async () => {
       const user = await service.findUserById(userId);
       expect(user).toMatchObject(userBody);
+    });
+  });
+
+  describe('Change passwrod', () => {
+    it('should return user if change password success', async () => {
+      const changPwd: UpdateUserDto = {
+        oldPassword: 'M0ck123!',
+        newPassword: 'M0ck12345!',
+      };
+      const user = await service.changePassoword(userId, changPwd);
+
+      expect(user).toMatchObject(userBody);
+    });
+
+    it('should throw error if user id not found', async () => {
+      const changPwd: UpdateUserDto = {
+        oldPassword: 'M0ck123!',
+        newPassword: 'M0ck12345!',
+      };
+
+      await expect(
+        service.changePassoword('notFound', changPwd),
+      ).rejects.toThrow(Error('USER_NOT_FOUND'));
+    });
+
+    it('should throw error if old password is incorrect', async () => {
+      const changPwd: UpdateUserDto = {
+        oldPassword: 'M0ck1233132321312!',
+        newPassword: 'M0ck12345!',
+      };
+
+      await expect(
+        service.changePassoword('notFound', changPwd),
+      ).rejects.toThrow(Error('OLD_PASSWORD_IS_INCIRRECT'));
     });
   });
 
